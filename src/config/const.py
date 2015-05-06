@@ -1,0 +1,11 @@
+#coding:utf-8
+
+#ERROR TYPE
+SUCCESS = 0
+PARAM_ERROR = 10001
+HTTP_REQUEST_ERROR = 10002
+HTTP_TIME_OUT = 10003
+
+
+#URL
+SEND_SMS_URL = 'http://sms.chanzor.com:8001/sms.aspx'
