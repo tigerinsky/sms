@@ -8,9 +8,10 @@ def timer(content):
     def dercorator(fn):
         def wrapper(*args):
             pre = time.time()
-            fn(*args)
+            result = fn(*args)
             cost = (time.time() - pre) * 1000
             logger.info('%s, cost[%s]' % (content, cost))
+            return result
         return wrapper
     return dercorator
                 
