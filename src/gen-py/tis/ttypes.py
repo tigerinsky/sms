@@ -23,6 +23,7 @@ class SendSMSRequest:
    - mobile
    - content
    - send_time
+   - sid
   """
 
   thrift_spec = (
@@ -30,12 +31,14 @@ class SendSMSRequest:
     (1, TType.STRING, 'mobile', None, None, ), # 1
     (2, TType.STRING, 'content', None, None, ), # 2
     (3, TType.I32, 'send_time', None, 0, ), # 3
+    (4, TType.I32, 'sid', None, None, ), # 4
   )
 
-  def __init__(self, mobile=None, content=None, send_time=thrift_spec[3][4],):
+  def __init__(self, mobile=None, content=None, send_time=thrift_spec[3][4], sid=None,):
     self.mobile = mobile
     self.content = content
     self.send_time = send_time
+    self.sid = sid
 
   def read(self, iprot):
     if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
@@ -61,6 +64,11 @@ class SendSMSRequest:
           self.send_time = iprot.readI32();
         else:
           iprot.skip(ftype)
+      elif fid == 4:
+        if ftype == TType.I32:
+          self.sid = iprot.readI32();
+        else:
+          iprot.skip(ftype)
       else:
         iprot.skip(ftype)
       iprot.readFieldEnd()
@@ -83,6 +91,10 @@ class SendSMSRequest:
       oprot.writeFieldBegin('send_time', TType.I32, 3)
       oprot.writeI32(self.send_time)
       oprot.writeFieldEnd()
+    if self.sid is not None:
+      oprot.writeFieldBegin('sid', TType.I32, 4)
+      oprot.writeI32(self.sid)
+      oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
 
@@ -93,6 +105,8 @@ class SendSMSRequest:
       raise TProtocol.TProtocolException(message='Required field content is unset!')
     if self.send_time is None:
       raise TProtocol.TProtocolException(message='Required field send_time is unset!')
+    if self.sid is None:
+      raise TProtocol.TProtocolException(message='Required field sid is unset!')
     return
 
 
@@ -101,6 +115,7 @@ class SendSMSRequest:
     value = (value * 31) ^ hash(self.mobile)
     value = (value * 31) ^ hash(self.content)
     value = (value * 31) ^ hash(self.send_time)
+    value = (value * 31) ^ hash(self.sid)
     return value
 
   def __repr__(self):

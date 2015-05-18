@@ -10,6 +10,8 @@ import xml.etree.ElementTree as ET
 from util.log import logger
 from util.timer import timer
 from util import http
+from db import Session
+from model.user_sms import UserSms
 
 from config.const import PARAM_ERROR
 from config.const import SEND_SMS_URL
@@ -55,20 +57,32 @@ class SMSServiceHandler(object):
 
         logger.debug('result:%s' % result)
         root = None
+        sid = request.sid
+        errno = 0
+        task_id = ''
+        valid = 0
+        dbstatus = 0
         try:
             root = ET.fromstring(result)
             status = root.find('returnstatus').text
             if status != 'Success':
                 msg = root.find('message').text
                 logger.warning('send failed, msg[%s]' % msg)
-                return SEND_FAILED
+                errno =  SEND_FAILED
+            else:
+                task_id = root.find('taskID').text
+                dbstatus = 1
+                valid = 1
         except xml.etree.ElementTree.ParseError:
             logger.warning("invalid result[%s] request[%s]" % (result, request))
-            return THIRD_SERVER_ERROR
+            errno = THIRD_SERVER_ERROR
         except Exception, e:
             logger.warning('xml parse exception,ult[%s] request[%s]' % (result, request))
 
-        return SUCCESS
+        UserSms.update(sid, dbstatus, valid, task_id)
+        Session.remove()
+
+        return errno
 
     def heart_beat(self):
         return True

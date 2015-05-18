@@ -24,6 +24,7 @@ try:
     # Connect!
     transport.open()
     request = SendSMSRequest('18611629534', '亲爱的用户您好，您的验证码为：8857。请于10分钟内完成注册。【美院帮】')
+    request.sid = 10
     #print client.heart_beat()
 
     print client.send_sms(request)
