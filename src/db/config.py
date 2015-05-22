@@ -1,7 +1,7 @@
 #coding:utf-8
 
-HOST =
+HOST = 
 PORT = 
-USER =
-PASSPORT =
-DBNAME =
+USER = 
+PASSPORT = 
+DBNAME = 

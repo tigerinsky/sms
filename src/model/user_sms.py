@@ -23,11 +23,12 @@ class UserSms(Base):
     def update(cls, sid, status, valid=1, identifier=''):
         try:
             r = Session.query(cls).filter(cls.sid == sid).first()
-            r.identifier = identifier
-            r.status = status
-            r.valid = valid
-            Session.add(r)
-            Session.commit()
+            if r:
+                r.identifier = identifier
+                r.status = status
+                r.valid = valid
+                Session.add(r)
+                Session.commit()
             return r
         except sqlalchemy.exc.IntegrityError, e:
             Session.rollback()
